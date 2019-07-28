@@ -3,6 +3,7 @@ defmodule BeanApp.TransactionTest do
   doctest BeanApp.Transaction
 
   alias BeanApp.Transaction
+  alias Workers.Classifier
 
   import Mock
 
@@ -32,7 +33,7 @@ defmodule BeanApp.TransactionTest do
   end
 
   test "reindex_unknowns" do
-    Transaction.write({"foo", "unknown"})
+    Transaction.write({"foo", Classifier.unknown})
     Transaction.refresh_index
 
     with_mock BeanApp.Loader, [queue_transaction: fn("foo") -> :ok end] do

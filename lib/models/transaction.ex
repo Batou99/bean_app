@@ -12,6 +12,8 @@ defmodule BeanApp.Transaction do
 
   use Elastic.Document.API
 
+  alias Workers.Classifier
+
   defstruct id: nil, description: [], merchant_name: []
 
   def create_index do
@@ -31,7 +33,7 @@ defmodule BeanApp.Transaction do
   end
 
   def reindex_unknowns do
-    find_by_merchant_name("unknown")
+    find_by_merchant_name(Classifier.unknown)
     |> Enum.map(&(&1.description))
     |> Enum.map(&BeanApp.Loader.queue_transaction/1)
   end
