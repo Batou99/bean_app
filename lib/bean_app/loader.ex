@@ -3,13 +3,13 @@ defmodule BeanApp.Loader do
 
   @spec load_merchants :: [{:error, char(), any} | {:ok, any, any}]
   def load_merchants do
-    load_file("date/merchants.txt")
+    load_file("data/merchants.txt")
     |> Enum.map(&Merchant.save /1)
   end
 
   @spec load_transactions :: [%Honeydew.Job{}]
   def load_transactions do
-    load_file("date/transactions.txt")
+    load_file("data/transactions.txt")
     |> Enum.map(&queue_transaction/1)
   end
 

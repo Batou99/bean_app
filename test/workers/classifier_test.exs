@@ -7,23 +7,52 @@ defmodule Workers.ClassifierTest do
 
   import Mock
 
-  test "classify unknown merchant" do
-    with_mocks([
-      {Merchant, [],[find:  fn("foo") -> [] end]},
-      {Transaction, [], [save : fn({"foo", Classifier.unknown}) -> :ok end]},
-      {IO, [], [puts: fn(_) -> :ok end]}
-    ]) do
-      assert Classifier.classify("foo") == :ok
+  describe "classify unknown merchant" do
+    setup do
+      [mocks: [
+        {Merchant, [],[
+          find: fn
+            "foo" -> []
+            "Unknown" -> [] 
+          end,
+          save: fn("Unknown") -> :ok end]},
+        {Transaction, [], [save: fn({"foo", "Unknown"}) -> :ok end]},
+        {IO, [], [puts: fn(_) -> :ok end]}]
+      ]
+    end
+
+    test "classify a transaction", context do
+      with_mocks(context[:mocks]) do
+        Classifier.classify("foo")
+
+        assert_called Transaction.save({"foo", "Unknown"})
+      end
+    end
+
+    test "creates a new unknown merchant", context do
+      with_mocks(context[:mocks]) do
+        Classifier.classify("foo")
+
+        assert_called Merchant.save(Classifier.unknown)
+      end
     end
   end
 
-  test "classify known merchant" do
-    with_mocks([
-      {Merchant, [],[find:  fn("foo") -> [%{name: "bar"}] end]},
-      {Transaction, [], [save : fn({"foo", "bar"}) -> :ok end]},
-      {IO, [], [puts: fn(_) -> :ok end]}
-    ]) do
-      assert Classifier.classify("foo") == :ok
+  describe "known merchant" do
+    setup do
+      [mocks: [
+        {Merchant, [],[find:  fn("foo") -> [%Merchant{name: "bar"}] end]},
+        {Transaction, [], [save: fn({"foo", "bar"}) -> :ok end]},
+        {IO, [], [puts: fn(_) -> :ok end]}]
+      ]
+    end
+
+    test "classify a transaction", context do
+      with_mocks(context[:mocks]) do
+        Classifier.classify("foo")
+
+        assert_called Transaction.save({"foo", "bar"})
+      end
     end
   end
 end

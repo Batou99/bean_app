@@ -7,7 +7,7 @@ defmodule Workers.Classifier do
 
   @spec classify(String.t) :: {:error, char(), any} | {:ok, any, any}
   def classify(description) do
-    merchant = Merchant.find(description) |> List.first || %{name: @unknown}
+    merchant = find_merchant(description) || find_merchant(@unknown)
 
     IO.puts description <> ", " <> merchant_string(merchant.name)
 
@@ -17,6 +17,20 @@ defmodule Workers.Classifier do
   @spec unknown :: String.t
   def unknown do
     @unknown
+  end
+
+  defp find_merchant(@unknown) do
+    case Merchant.find(@unknown) do
+      [merchant | _rest] -> merchant
+      [] -> 
+        Merchant.save(@unknown)
+        %Merchant{name: @unknown}
+    end
+  end
+
+  @spec find_merchant(String.t) :: Merchant.t | nil
+  defp find_merchant(description) do
+    Merchant.find(description) |> List.first
   end
 
   # NOTE: No spec because overloaded contracts are not supported
