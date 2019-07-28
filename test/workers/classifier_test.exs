@@ -10,7 +10,7 @@ defmodule Workers.ClassifierTest do
   test "classify unknown merchant" do
     with_mocks([
       {Merchant, [],[find:  fn("foo") -> [] end]},
-      {Transaction, [], [write: fn({"foo", Classifier.unknown}) -> :ok end]},
+      {Transaction, [], [save : fn({"foo", Classifier.unknown}) -> :ok end]},
       {IO, [], [puts: fn(_) -> :ok end]}
     ]) do
       assert Classifier.classify("foo") == :ok
@@ -20,7 +20,7 @@ defmodule Workers.ClassifierTest do
   test "classify known merchant" do
     with_mocks([
       {Merchant, [],[find:  fn("foo") -> [%{name: "bar"}] end]},
-      {Transaction, [], [write: fn({"foo", "bar"}) -> :ok end]},
+      {Transaction, [], [save : fn({"foo", "bar"}) -> :ok end]},
       {IO, [], [puts: fn(_) -> :ok end]}
     ]) do
       assert Classifier.classify("foo") == :ok

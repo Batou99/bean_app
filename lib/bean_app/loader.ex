@@ -4,7 +4,7 @@ defmodule BeanApp.Loader do
   def load_merchants do
     File.stream!("data/merchants.txt")
     |> Enum.map(&String.trim/1)
-    |> Enum.map(&Merchant.write/1)
+    |> Enum.map(&Merchant.save /1)
   end
 
   def load_transactions do

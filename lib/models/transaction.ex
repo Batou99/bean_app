@@ -28,7 +28,7 @@ defmodule BeanApp.Transaction do
     Elastic.Index.refresh(@es_index)
   end
 
-  def write({description, merchant_name}) do
+  def save({description, merchant_name}) do
     index(hash(description), %{description: description, merchant_name: merchant_name})
   end
 

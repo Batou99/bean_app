@@ -10,7 +10,7 @@ defmodule BeanApp.TransactionTest do
   setup do
     description = "foo, bar and baz"
     Transaction.create_index
-    Transaction.write({description, "some_merchant"})
+    Transaction.save ({description, "some_merchant"})
     Transaction.refresh_index
 
     on_exit fn -> Transaction.delete_index end
@@ -33,7 +33,7 @@ defmodule BeanApp.TransactionTest do
   end
 
   test "reindex_unknowns" do
-    Transaction.write({"foo", Classifier.unknown})
+    Transaction.save ({"foo", Classifier.unknown})
     Transaction.refresh_index
 
     with_mock BeanApp.Loader, [queue_transaction: fn("foo") -> :ok end] do

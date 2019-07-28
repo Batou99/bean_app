@@ -10,8 +10,8 @@ defmodule BeanApp.MerchantTest do
     on_exit fn -> Merchant.delete_index end
   end
 
-  test "write and find" do
-    Merchant.write("Google")
+  test "save and find" do
+    Merchant.save ("Google")
     [merchant] = Merchant.find("google")
 
     assert merchant.name == "Google"

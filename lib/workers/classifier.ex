@@ -10,7 +10,7 @@ defmodule Workers.Classifier do
 
     IO.puts description <> ", " <> merchant_string(merchant.name)
 
-    Transaction.write({description, merchant.name})
+    Transaction.save ({description, merchant.name})
   end
 
   def unknown do
