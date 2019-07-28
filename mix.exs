@@ -26,7 +26,8 @@ defmodule BeanApp.MixProject do
       {:elastic, "~> 3.5.0"},
       {:poison,  "~> 3.1.0"},
       {:honeydew, "~> 1.4.3"},
-      {:mock, "~> 0.3.0", only: :test}
+      {:mock, "~> 0.3.0", only: :test},
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false}
     ]
   end
 
